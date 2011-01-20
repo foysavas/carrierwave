@@ -53,6 +53,13 @@ module CarrierWave
     #
     #     http://bucketname.domain.tld.s3.amazonaws.com/path/to/file
     #
+    # Alternatively, you can specify a cname as a string and its value with be used
+    # instead of the bucket name.
+    #
+    #     CarrierWave.configure do |config|
+    #       config.s3_cnamed = "cnamed_domain.tld"
+    #     end
+    #
     # You can specify a region. US Standard "us-east-1" is the default.
     #
     #     CarrierWave.configure do |config|
@@ -124,7 +131,11 @@ module CarrierWave
 
         def public_url
           if cnamed?
-            ["http://#{bucket}", path].compact.join('/')
+            if @uploader.s3_cnamed.is_a? String
+              ["http://#{@uploader.s3_cnamed}", path].compact.join('/')
+            else
+              ["http://#{bucket}", path].compact.join('/')
+            end
           else
             ["http://#{bucket}.s3.amazonaws.com", path].compact.join('/')
           end

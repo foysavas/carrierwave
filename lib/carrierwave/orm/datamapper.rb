@@ -31,7 +31,8 @@ module CarrierWave
           else                                         
             _mounter(:#{column}).cache(new_file)
             _mounter(:#{column}).remove = nil
-            attribute_set(:#{column}, Time.now.to_s)
+            attribute_set(:#{column}, _mounter(:#{column}).cache_name) 
+            write_#{column}_identifier 
           end
         end
       RUBY
